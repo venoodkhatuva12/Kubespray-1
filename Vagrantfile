@@ -155,24 +155,24 @@ Vagrant.configure("2") do |config|
 
       # Only execute once the Ansible provisioner,
       # when all the machines are up and ready.
-      if i == $num_instances
-        config.vm.provision "ansible" do |ansible|
-          ansible.playbook = "cluster.yml"
-          if File.exist?(File.join(File.dirname($inventory), "hosts"))
-            ansible.inventory_path = $inventory
-          end
-          ansible.become = true
-          ansible.limit = "all"
-          ansible.host_key_checking = false
-          ansible.raw_arguments = ["--forks=#{$num_instances}", "--flush-cache"]
-          ansible.host_vars = host_vars
-          #ansible.tags = ['download']
-          ansible.groups = {
-            "etcd" => ["#{$instance_name_prefix}-0[1:#{$etcd_instances}]"],
-            "kube-master" => ["#{$instance_name_prefix}-0[1:#{$kube_master_instances}]"],
-            "kube-node" => ["#{$instance_name_prefix}-0[1:#{$kube_node_instances}]"],
-            "k8s-cluster:children" => ["kube-master", "kube-node"],
-          }
+#      if i == $num_instances
+#        config.vm.provision "ansible" do |ansible|
+#          ansible.playbook = "cluster.yml"
+#          if File.exist?(File.join(File.dirname($inventory), "hosts"))
+#            ansible.inventory_path = $inventory
+#          end
+#          ansible.become = true
+#          ansible.limit = "all"
+#          ansible.host_key_checking = false
+#          ansible.raw_arguments = ["--forks=#{$num_instances}", "--flush-cache"]
+#          ansible.host_vars = host_vars
+#          #ansible.tags = ['download']
+#          ansible.groups = {
+#            "etcd" => ["#{$instance_name_prefix}-0[1:#{$etcd_instances}]"],
+#            "kube-master" => ["#{$instance_name_prefix}-0[1:#{$kube_master_instances}]"],
+#            "kube-node" => ["#{$instance_name_prefix}-0[1:#{$kube_node_instances}]"],
+#            "k8s-cluster:children" => ["kube-master", "kube-node"],
+#          }
         end
       end
 
