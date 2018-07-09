@@ -23,14 +23,14 @@ SUPPORTED_OS = {
 }
 
 # Defaults for config options defined in CONFIG
-$num_instances = 3
+$num_instances = 4
 $instance_name_prefix = "k8s"
 $vm_gui = false
 $vm_memory = 2048
 $vm_cpus = 1
 $shared_folders = {}
 $forwarded_ports = {}
-$subnet = "172.17.8"
+$subnet = "10.10.1"
 $os = "ubuntu"
 $network_plugin = "flannel"
 # The first three nodes are etcd servers
@@ -152,30 +152,6 @@ Vagrant.configure("2") do |config|
           end
         end
       end
-
-      # Only execute once the Ansible provisioner,
-      # when all the machines are up and ready.
-#      if i == $num_instances
-#        config.vm.provision "ansible" do |ansible|
-#          ansible.playbook = "cluster.yml"
-#          if File.exist?(File.join(File.dirname($inventory), "hosts"))
-#            ansible.inventory_path = $inventory
-#          end
-#          ansible.become = true
-#          ansible.limit = "all"
-#          ansible.host_key_checking = false
-#          ansible.raw_arguments = ["--forks=#{$num_instances}", "--flush-cache"]
-#          ansible.host_vars = host_vars
-#          #ansible.tags = ['download']
-#          ansible.groups = {
-#            "etcd" => ["#{$instance_name_prefix}-0[1:#{$etcd_instances}]"],
-#            "kube-master" => ["#{$instance_name_prefix}-0[1:#{$kube_master_instances}]"],
-#            "kube-node" => ["#{$instance_name_prefix}-0[1:#{$kube_node_instances}]"],
-#            "k8s-cluster:children" => ["kube-master", "kube-node"],
-#          }
-        end
-      end
-
     end
   end
 end
