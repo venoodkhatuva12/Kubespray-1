@@ -1,11 +1,23 @@
 ---
+- hosts: localhost
+  become: no
+  tasks:
+    - name: "Check ansible version >=2.7.8"
+      assert:
+        msg: "Ansible must be v2.7.8 or higher"
+        that:
+          - ansible_version.string is version("2.7.8", ">=")
+      tags:
+        - check
+  vars:
+    ansible_connection: local
 
 - hosts: all
   vars:
     ansible_ssh_pipelining: true
   gather_facts: true
 
-- hosts: "{{ node | default('etcd:k8s-cluster:vault:calico-rr') }}"
+- hosts: "{{ node | default('etcd:k8s-cluster:calico-rr') }}"
   vars_prompt:
     name: "delete_nodes_confirmation"
     prompt: "Are you sure you want to delete nodes state? Type 'yes' to delete nodes."
@@ -20,6 +32,7 @@
 
 - hosts: kube-master
   roles:
+    - { role: kubespray-defaults }
     - { role: remove-node/pre-remove, tags: pre-remove }
 
 - hosts: "{{ node | default('kube-node') }}"
@@ -29,4 +42,5 @@
 
 - hosts: kube-master
   roles:
+    - { role: kubespray-defaults }
     - { role: remove-node/post-remove, tags: post-remove }

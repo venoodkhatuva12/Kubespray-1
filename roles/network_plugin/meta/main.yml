@@ -25,10 +25,30 @@ dependencies:
     tags:
       - canal
 
+  - role: network_plugin/cni
+    when: kube_network_plugin == 'cni'
+    tags:
+      - cni
+
+  - role: network_plugin/macvlan
+    when: kube_network_plugin == 'macvlan'
+    tags:
+      - macvlan
+
   - role: network_plugin/contiv
     when: kube_network_plugin == 'contiv'
     tags:
       - contiv
 
+  - role: network_plugin/kube-router
+    when: kube_network_plugin == 'kube-router'
+    tags:
+      - kube-router
+
   - role: network_plugin/cloud
     when: kube_network_plugin == 'cloud'
+
+  - role: network_plugin/multus
+    when: kube_network_plugin_multus
+    tags:
+      - multus
